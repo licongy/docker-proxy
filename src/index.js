@@ -91,7 +91,8 @@ export default {
     const newReq = new Request(newUrl, {
       method: request.method,
       headers: request.headers,
-      redirect: isDockerHub ? "manual" : "follow", // Docker Hub 手动处理重定向以隐藏 CDN
+      // redirect: isDockerHub ? "manual" : "follow", // Docker Hub 手动处理重定向以隐藏 CDN
+      redirect: "manual", // 全部手动处理重定向，统一逻辑，避免部分 CDN 直连被墙问题
     });
 
     const resp = await fetch(newReq);
@@ -100,7 +101,8 @@ export default {
     }
 
     // 6. 核心黑科技：手动代下 307 Blob 文件，防止国内直连 CDN 被墙
-    if (isDockerHub && resp.status === 307) {
+    // if (isDockerHub && resp.status === 307) {
+    if ([301, 302, 307, 308].includes(resp.status)) {
       const location = resp.headers.get("Location");
       if (location) {
         return await fetch(location, { method: "GET", redirect: "follow" });

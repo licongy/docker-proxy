@@ -1,0 +1,47 @@
+name = "docker-proxy"
+main = "src/index.js"
+compatibility_date = "2026-06-05" # 写今天的日期即可
+workers_dev = false
+
+# 配置你的环境变量
+[vars]
+CUSTOM_DOMAIN = "hulacurry.com" # 这里填你的根域名！
+
+
+
+[dev]
+ip = "0.0.0.0"
+port = 8787
+local_protocol = "http"
+
+# [env.vars]
+# CUSTOM_DOMAIN = "hulacurry.com"
+
+[env.dev.vars]
+MODE = "debug"
+TARGET_UPSTREAM = "https://registry-1.docker.io"
+CUSTOM_DOMAIN = "hulacurry.com"
+
+[env.production]
+name = "docker-proxy"
+# routes = [
+#   { pattern = "docker.libcuda.so", custom_domain = true },
+#   { pattern = "quay.libcuda.so", custom_domain = true },
+#   { pattern = "gcr.libcuda.so", custom_domain = true },
+#   { pattern = "k8s-gcr.libcuda.so", custom_domain = true },
+#   { pattern = "k8s.libcuda.so", custom_domain = true },
+#   { pattern = "ghcr.libcuda.so", custom_domain = true },
+#   { pattern = "cloudsmith.libcuda.so", custom_domain = true },
+# ]
+
+[env.production.vars]
+MODE = "production"
+TARGET_UPSTREAM = ""
+
+[env.staging]
+name = "cloudflare-docker-proxy-staging"
+# route = { pattern = "docker-staging.libcuda.so", custom_domain = true }
+
+[env.staging.vars]
+MODE = "staging"
+TARGET_UPSTREAM = ""
